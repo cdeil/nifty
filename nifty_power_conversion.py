@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 ## NIFTY (Numerical Information Field Theory) has been developed at the
 ## Max-Planck-Institute for Astrophysics.
 ##

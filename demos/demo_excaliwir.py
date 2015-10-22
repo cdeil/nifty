@@ -32,6 +32,8 @@
 
 """
 from __future__ import division
+from __future__ import absolute_import
+from __future__ import print_function
 from nifty import *
 
 
@@ -169,7 +171,7 @@ class problem(object):
             ## check convergence
             dtau = log(power / self.S.get_power(), base=self.S.get_power())
             iterating = (np.max(np.abs(dtau)) > 2E-2)
-            print max(np.abs(dtau))
+            print(max(np.abs(dtau)))
 
             ## update signal covariance
             self.S.set_power(power, bare=False) ## auto-updates D

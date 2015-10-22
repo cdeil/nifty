@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 ## NIFTY (Numerical Information Field Theory) has been developed at the
 ## Max-Planck-Institute for Astrophysics.
 ##
@@ -19,16 +20,16 @@
 ## You should have received a copy of the GNU General Public License
 ## along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-import copy_reg as cr
+import six.moves.copyreg as cr
 from types import MethodType as mt
 
 
 ##-----------------------------------------------------------------------------
 
 def _pickle_method(method):
-    fct_name = method.im_func.__name__
-    obj = method.im_self
-    cl = method.im_class
+    fct_name = method.__func__.__name__
+    obj = method.__self__
+    cl = method.__self__.__class__
     ## handle mangled function name
     if(fct_name.startswith("__"))and(not fct_name.endswith("__")):
         cl_name = cl.__name__.lstrip("_")

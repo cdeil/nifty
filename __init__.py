@@ -20,24 +20,25 @@
 ## along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 from __future__ import division
-from nifty_core import * ## imports `about`
-from nifty_cmaps import *
-from nifty_power import *
-from nifty_tools import *
-from nifty_explicit import *
+from __future__ import absolute_import
+from .nifty_core import * ## imports `about`
+from .nifty_cmaps import *
+from .nifty_power import *
+from .nifty_tools import *
+from .nifty_explicit import *
 
 ## optional submodule `rg`
 try:
-    from rg import *
+    from .rg import *
 except(ImportError):
     pass
 
 ## optional submodule `lm`
 try:
-    from lm import *
+    from .lm import *
 except(ImportError):
     pass
 
-from demos import *
-from pickling import *
+from .demos import *
+from .pickling import *
 

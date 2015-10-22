@@ -141,6 +141,7 @@
 
 """
 from __future__ import division
+from __future__ import absolute_import
 import os
 from sys import stdout as so
 import numpy as np
@@ -148,6 +149,9 @@ import pylab as pl
 from multiprocessing import Pool as mp
 from multiprocessing import Value as mv
 from multiprocessing import Array as ma
+import six
+from six.moves import range
+from six.moves import zip
 
 
 __version__ = "1.0.7"
@@ -1659,7 +1663,7 @@ class space(object):
     ##+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
     def _meta_vars(self): ## > captures all nonstandard properties
-        mars = np.array([ii[1] for ii in vars(self).iteritems() if ii[0] not in ["para","datatype","discrete","vol","power_indices"]],dtype=np.object)
+        mars = np.array([ii[1] for ii in six.iteritems(vars(self)) if ii[0] not in ["para","datatype","discrete","vol","power_indices"]],dtype=np.object)
         if(np.size(mars)==0):
             return None
         else:
@@ -1682,19 +1686,19 @@ class space(object):
             if(not isinstance(x,type(self)))or(np.size(self.para)!=np.size(x.para))or(np.size(self.vol)!=np.size(x.vol)):
                 raise ValueError(about._errors.cstring("ERROR: incomparable spaces."))
             elif(self.discrete==x.discrete): ## data types are ignored
-                for ii in xrange(np.size(self.para)):
+                for ii in range(np.size(self.para)):
                     if(self.para[ii]<x.para[ii]):
                         return True
                     elif(self.para[ii]>x.para[ii]):
                         return False
-                for ii in xrange(np.size(self.vol)):
+                for ii in range(np.size(self.vol)):
                     if(self.vol[ii]<x.vol[ii]):
                         return True
                     elif(self.vol[ii]>x.vol[ii]):
                         return False
                 s_mars = self._meta_vars()
                 x_mars = x._meta_vars()
-                for ii in xrange(np.size(s_mars)):
+                for ii in range(np.size(s_mars)):
                     if(np.all(s_mars[ii]<x_mars[ii])):
                         return True
                     elif(np.any(s_mars[ii]>x_mars[ii])):
@@ -1706,19 +1710,19 @@ class space(object):
             if(not isinstance(x,type(self)))or(np.size(self.para)!=np.size(x.para))or(np.size(self.vol)!=np.size(x.vol)):
                 raise ValueError(about._errors.cstring("ERROR: incomparable spaces."))
             elif(self.discrete==x.discrete): ## data types are ignored
-                for ii in xrange(np.size(self.para)):
+                for ii in range(np.size(self.para)):
                     if(self.para[ii]<x.para[ii]):
                         return True
                     if(self.para[ii]>x.para[ii]):
                         return False
-                for ii in xrange(np.size(self.vol)):
+                for ii in range(np.size(self.vol)):
                     if(self.vol[ii]<x.vol[ii]):
                         return True
                     if(self.vol[ii]>x.vol[ii]):
                         return False
                 s_mars = self._meta_vars()
                 x_mars = x._meta_vars()
-                for ii in xrange(np.size(s_mars)):
+                for ii in range(np.size(s_mars)):
                     if(np.all(s_mars[ii]<x_mars[ii])):
                         return True
                     elif(np.any(s_mars[ii]>x_mars[ii])):
@@ -1731,19 +1735,19 @@ class space(object):
             if(not isinstance(x,type(self)))or(np.size(self.para)!=np.size(x.para))or(np.size(self.vol)!=np.size(x.vol)):
                 raise ValueError(about._errors.cstring("ERROR: incomparable spaces."))
             elif(self.discrete==x.discrete): ## data types are ignored
-                for ii in xrange(np.size(self.para)):
+                for ii in range(np.size(self.para)):
                     if(self.para[ii]>x.para[ii]):
                         return True
                     elif(self.para[ii]<x.para[ii]):
                         break
-                for ii in xrange(np.size(self.vol)):
+                for ii in range(np.size(self.vol)):
                     if(self.vol[ii]>x.vol[ii]):
                         return True
                     elif(self.vol[ii]<x.vol[ii]):
                         break
                 s_mars = self._meta_vars()
                 x_mars = x._meta_vars()
-                for ii in xrange(np.size(s_mars)):
+                for ii in range(np.size(s_mars)):
                     if(np.all(s_mars[ii]>x_mars[ii])):
                         return True
                     elif(np.any(s_mars[ii]<x_mars[ii])):
@@ -1755,19 +1759,19 @@ class space(object):
             if(not isinstance(x,type(self)))or(np.size(self.para)!=np.size(x.para))or(np.size(self.vol)!=np.size(x.vol)):
                 raise ValueError(about._errors.cstring("ERROR: incomparable spaces."))
             elif(self.discrete==x.discrete): ## data types are ignored
-                for ii in xrange(np.size(self.para)):
+                for ii in range(np.size(self.para)):
                     if(self.para[ii]>x.para[ii]):
                         return True
                     if(self.para[ii]<x.para[ii]):
                         return False
-                for ii in xrange(np.size(self.vol)):
+                for ii in range(np.size(self.vol)):
                     if(self.vol[ii]>x.vol[ii]):
                         return True
                     if(self.vol[ii]<x.vol[ii]):
                         return False
                 s_mars = self._meta_vars()
                 x_mars = x._meta_vars()
-                for ii in xrange(np.size(s_mars)):
+                for ii in range(np.size(s_mars)):
                     if(np.all(s_mars[ii]>x_mars[ii])):
                         return True
                     elif(np.any(s_mars[ii]<x_mars[ii])):
@@ -2060,7 +2064,7 @@ class point_space(space):
             else:
                 other = [self.enforce_values(other,extend=True)]
             imax = max(1,len(other)-1)
-            for ii in xrange(len(other)):
+            for ii in range(len(other)):
                 ax0.scatter(xaxes,other[ii],s=20,color=[max(0.0,1.0-(2*ii/imax)**2),0.5*((2*ii-imax)/imax)**2,max(0.0,1.0-(2*(ii-imax)/imax)**2)],marker='o',cmap=None,norm=None,vmin=None,vmax=None,alpha=None,label="graph "+str(ii),linewidths=None,verts=None,zorder=-ii)
             if(legend):
                 ax0.legend()
@@ -4531,10 +4535,10 @@ class nested_space(space):
             ##   len(nest')==len(nest)
             elif(len(codomain.nest)==len(self.nest)):
                 ## check permutability
-                unpaired = range(len(self.nest))
+                unpaired = list(range(len(self.nest)))
                 ambiguous = False
-                for ii in xrange(len(self.nest)):
-                    for jj in xrange(len(self.nest)):
+                for ii in range(len(self.nest)):
+                    for jj in range(len(self.nest)):
                         if(codomain.nest[ii]==self.nest[jj]):
                             if(jj in unpaired):
                                 unpaired.remove(jj)
@@ -4753,8 +4757,8 @@ class nested_space(space):
                 ## check coorder
                 if(coorder is None):
                     coorder = -np.ones(len(self.nest),dtype=np.int,order='C')
-                    for ii in xrange(len(self.nest)):
-                        for jj in xrange(len(self.nest)):
+                    for ii in range(len(self.nest)):
+                        for jj in range(len(self.nest)):
                             if(codomain.nest[ii]==self.nest[jj]):
                                 if(ii not in coorder):
                                     coorder[jj] = ii
@@ -4765,20 +4769,20 @@ class nested_space(space):
                     coorder = np.array(coorder,dtype=np.int).reshape(len(self.nest),order='C')
                     if(np.any(np.sort(coorder,axis=0,kind="quicksort",order=None)!=np.arange(len(self.nest)))):
                         raise ValueError(about._errors.cstring("ERROR: invalid input."))
-                    for ii in xrange(len(self.nest)):
+                    for ii in range(len(self.nest)):
                         if(codomain.nest[coorder[ii]]!=self.nest[ii]):
                             raise ValueError(about._errors.cstring("ERROR: invalid input."))
                 ## compute axes permutation
                 lim = np.zeros((len(self.nest),2),dtype=np.int)
-                for ii in xrange(len(self.nest)):
+                for ii in range(len(self.nest)):
                     lim[ii] = np.array([lim[ii-1][1],lim[ii-1][1]+np.size(self.nest[coorder[ii]].dim(split=True))])
                 lim = lim[coorder]
                 reorder = []
-                for ii in xrange(len(self.nest)):
-                    reorder += range(lim[ii][0],lim[ii][1])
+                for ii in range(len(self.nest)):
+                    reorder += list(range(lim[ii][0],lim[ii][1]))
                 ## permute
                 Tx = np.copy(x)
-                for ii in xrange(len(reorder)):
+                for ii in range(len(reorder)):
                     while(reorder[ii]!=ii):
                         Tx = np.swapaxes(Tx,ii,reorder[ii])
                         ii_ = reorder[reorder[ii]]
@@ -7975,7 +7979,7 @@ class diagonal_operator(operator):
         if(self.uni): ## identity
             return 1
         det = self.det()
-        if(det<>0):
+        if(det!=0):
             return 1/det
         else:
             raise ValueError(about._errors.cstring("ERROR: singular operator."))
@@ -8599,7 +8603,7 @@ class projection_operator(operator):
         else:
             assign = self.domain.enforce_shape(assign).astype(np.int).flatten(order='C')
         ## build indexing
-        self.ind = [np.where(assign==ii)[0] for ii in xrange(np.max(assign,axis=None,out=None)+1) if ii in assign]
+        self.ind = [np.where(assign==ii)[0] for ii in range(np.max(assign,axis=None,out=None)+1) if ii in assign]
 
         self.sym = True
 #        about.infos.cprint("INFO: pseudo unitary projection operator.")
@@ -8634,11 +8638,11 @@ class projection_operator(operator):
         """
         rho = np.empty(len(self.ind),dtype=np.int,order='C')
         if(self.domain.dim(split=False)==self.domain.dof()): ## no hidden degrees of freedom
-            for ii in xrange(len(self.ind)):
+            for ii in range(len(self.ind)):
                 rho[ii] = len(self.ind[ii])
         else: ## hidden degrees of freedom
             mof = np.round(np.real(self.domain.calc_weight(self.domain.get_meta_volume(total=False),power=-1).flatten(order='C')),decimals=0,out=None).astype(np.int) ## meta degrees of freedom
-            for ii in xrange(len(self.ind)):
+            for ii in range(len(self.ind)):
                 rho[ii] = np.sum(mof[self.ind[ii]],axis=None,dtype=np.int,out=None)
         return rho
 
@@ -8690,7 +8694,7 @@ class projection_operator(operator):
         else:
             Px = np.zeros((len(self.ind),self.domain.dim(split=False)),dtype=self.target.datatype,order='C')
             x_ = x.val.flatten(order='C')
-            for bb in xrange(self.bands()):
+            for bb in range(self.bands()):
                 Px[bb][self.ind[bb]] += x_[self.ind[bb]]
             Px = field(self.target,val=Px,target=nested_space([point_space(len(self.ind),datatype=x.target.datatype),x.target]))
             return Px
@@ -8761,7 +8765,7 @@ class projection_operator(operator):
         ## evaluate
         y = self._debriefing(x,x_,self.target,False)
         ## split if ...
-        if(kwargs.get("split",False))and((kwargs.has_key("band"))or(kwargs.has_key("bandsup"))):
+        if(kwargs.get("split",False))and(("band" in kwargs)or("bandsup" in kwargs)):
             return y,x-y
         else:
             return y
@@ -8836,7 +8840,7 @@ class projection_operator(operator):
             x *= np.round(np.real(self.domain.calc_weight(self.domain.get_meta_volume(total=False),power=-1).flatten(order='C')),decimals=0,out=None).astype(np.int) ## meta degrees of freedom
 
         tr = np.empty(self.bands(),dtype=x.dtype,order='C')
-        for bb in xrange(self.bands()):
+        for bb in range(self.bands()):
             tr[bb] = np.sum(x[self.ind[bb]],axis=None,dtype=None,out=None)
         return tr
 
@@ -9255,7 +9259,7 @@ class response_operator(operator):
                 assignments = np.size(assign,axis=0)
                 if(np.ndim(assign)!=2)or(np.size(assign,axis=1)!=np.size(self.domain.dim(split=True))):
                     raise ValueError(about._errors.cstring("ERROR: invalid input."))
-                for ii in xrange(np.size(assign,axis=1)):
+                for ii in range(np.size(assign,axis=1)):
                     if(np.any(assign[:,ii]>=self.domain.dim(split=True)[ii]))or(np.any(assign[:,ii]<-self.domain.dim(split=True)[ii])):
                         raise IndexError(about._errors.cstring("ERROR: invalid bounds."))
                 if(assignments==len(np.unique(np.ravel_multi_index(assign.T,self.domain.dim(split=True),mode="raise",order='C'),return_index=False,return_inverse=False))):
@@ -9340,7 +9344,7 @@ class response_operator(operator):
         elif(isinstance(self.assign,list)):
             x_[self.assign] += x.val.flatten(order='C')
         else:
-            for ii in xrange(np.size(self.assign,axis=0)):
+            for ii in range(np.size(self.assign,axis=0)):
                 x_[np.array([self.assign[ii]]).T.tolist()] += x[ii]
         ## mask
         x_ *= self.mask
@@ -9578,7 +9582,7 @@ class probing(object):
             elif(op==function):
                 function = op.times
             ## check whether correctly bound
-            if(op!=function.im_self):
+            if(op!=function.__self__):
                 raise NameError(about._errors.cstring("ERROR: invalid input."))
             ## check given shape and domain
             if(domain is None)or(not isinstance(domain,space)):
@@ -9822,7 +9826,7 @@ class probing(object):
         pool = mp(processes=self.ncpu,initializer=_share._init_share,initargs=(_sum,_num,_var),maxtasksperchild=self.nper)
         try:
             ## pooling
-            pool.map_async(self._serial_probing,zip(seed,np.arange(self.nrun,dtype=np.int)),chunksize=None,callback=None).get(timeout=None)
+            pool.map_async(self._serial_probing,list(zip(seed,np.arange(self.nrun,dtype=np.int))),chunksize=None,callback=None).get(timeout=None)
             ## close and join pool
             about.infos.cflush(" done.")
             pool.close()
@@ -9851,7 +9855,7 @@ class probing(object):
         _sum = 0
         _num = 0
         _var = 0
-        for ii in xrange(self.nrun):
+        for ii in range(self.nrun):
             result = self._single_probing((np.random.randint(10**8,high=None,size=None),ii)) ## tuple(seed,idnum)
             if(result is not None):
                 _sum += result ## result: {scalar, np.array}
@@ -10059,7 +10063,7 @@ class trace_probing(probing):
         elif(op==function):
             function = op.times
         ## check whether correctly bound
-        if(op!=function.im_self):
+        if(op!=function.__self__):
             raise NameError(about._errors.cstring("ERROR: invalid input."))
         self.function = function
 
@@ -10232,7 +10236,7 @@ class trace_probing(probing):
         pool = mp(processes=self.ncpu,initializer=_share._init_share,initargs=(_sum,_num,_var),maxtasksperchild=self.nper)
         try:
             ## pooling
-            pool.map_async(self._serial_probing,zip(seed,np.arange(self.nrun,dtype=np.int)),chunksize=None,callback=None).get(timeout=None)
+            pool.map_async(self._serial_probing,list(zip(seed,np.arange(self.nrun,dtype=np.int))),chunksize=None,callback=None).get(timeout=None)
             ## close and join pool
             about.infos.cflush(" done.")
             pool.close()
@@ -10453,7 +10457,7 @@ class diagonal_probing(probing):
         elif(op==function):
             function = op.times
         ## check whether correctly bound
-        if(op!=function.im_self):
+        if(op!=function.__self__):
             raise NameError(about._errors.cstring("ERROR: invalid input."))
         self.function = function
 
@@ -10662,7 +10666,7 @@ class diagonal_probing(probing):
         pool = mp(processes=self.ncpu,initializer=_share._init_share,initargs=(_sum,_num,_var),maxtasksperchild=self.nper)
         try:
             ## pooling
-            pool.map_async(self._serial_probing,zip(seed,np.arange(self.nrun,dtype=np.int)),chunksize=None,callback=None).get(timeout=None)
+            pool.map_async(self._serial_probing,list(zip(seed,np.arange(self.nrun,dtype=np.int))),chunksize=None,callback=None).get(timeout=None)
             ## close and join pool
             about.infos.cflush(" done.")
             pool.close()

@@ -26,6 +26,7 @@
     the NIFTY demos calling :py:func:`get_demo_dir`.
 
 """
+from __future__ import absolute_import
 import os
 import nifty as nt
 

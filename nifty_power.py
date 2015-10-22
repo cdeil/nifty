@@ -41,14 +41,16 @@
 
 """
 from __future__ import division
+from __future__ import absolute_import
 from scipy.interpolate import interp1d as ip ## FIXME: conflicts with sphinx's autodoc
 #from nifty_core import *
 import numpy as np
-from nifty_core import about,                                                \
+from .nifty_core import about,                                                \
                        space,                                                \
                        field,                                                \
                        projection_operator
-import smoothing as gs
+from . import smoothing as gs
+from six.moves import range
 
 
 ##-----------------------------------------------------------------------------
@@ -269,7 +271,7 @@ def _calc_laplace(kindex): ## > computes Laplace operator and integrand
     klim = len(kindex)
     L = np.zeros((klim,klim))
     I = np.zeros(klim)
-    for jj in xrange(2,klim-1): ## leave out {0,1,kmax}
+    for jj in range(2,klim-1): ## leave out {0,1,kmax}
         L[jj,jj-1] = 2/(dl2[jj-1]*dl1[jj-1])
         L[jj,jj] = -2/dl2[jj-1]*(1/dl1[jj]+1/dl1[jj-1])
         L[jj,jj+1] = 2/(dl2[jj-1]*dl1[jj])
@@ -468,16 +470,16 @@ def infer_power(m,domain=None,Sk=None,D=None,pindex=None,pundex=None,kindex=None
         Sk = projection_operator(domain,assign=pindex)
     elif(not isinstance(Sk,projection_operator))or(not hasattr(Sk,"pseudo_tr")):
         raise TypeError(about._errors.cstring("ERROR: invalid input."))
-    elif(Sk.domain<>domain):
+    elif(Sk.domain!=domain):
         raise ValueError(about._errors.cstring("ERROR: invalid input."))
     ## check critical parameters
     if(not np.isscalar(q)):
         q = np.array(q,dtype=domain.vol.dtype).flatten()
-        if(np.size(q)<>np.size(kindex)):
+        if(np.size(q)!=np.size(kindex)):
             raise ValueError(about._errors.cstring("ERROR: invalid input."))
     if(not np.isscalar(alpha)):
         alpha = np.array(alpha,dtype=domain.vol.dtype).flatten()
-        if(np.size(alpha)<>np.size(kindex)):
+        if(np.size(alpha)!=np.size(kindex)):
             raise ValueError(about._errors.cstring("ERROR: invalid input."))
     ## check perception (delta,epsilon)
     if(perception is None):
@@ -491,7 +493,7 @@ def infer_power(m,domain=None,Sk=None,D=None,pindex=None,pundex=None,kindex=None
     ## check smothness variance
     if(not np.isscalar(var)):
         var = np.array(var,dtype=domain.vol.dtype).flatten()
-        if(np.size(var)<>np.size(kindex)):
+        if(np.size(var)!=np.size(kindex)):
             raise ValueError(about._errors.cstring("ERROR: invalid input."))
 
     ## trace(s) of B

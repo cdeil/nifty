@@ -22,7 +22,9 @@
 ## TODO: cythonize
 
 from __future__ import division
+from __future__ import absolute_import
 import numpy as np
+from six.moves import range
 
 
 def draw_vector_nd(axes,dgrid,ps,symtype=0,fourier=False,zerocentered=False,kpack=None):

@@ -38,6 +38,7 @@
 
 """
 from __future__ import division
+from __future__ import absolute_import
 #from nifty_core import *
 from sys import stdout as so
 import numpy as np
@@ -47,11 +48,14 @@ from matplotlib.ticker import LogFormatter as lf
 from multiprocessing import Pool as mp
 from multiprocessing import Value as mv
 from multiprocessing import Array as ma
-from nifty_core import about,                                                \
+from .nifty_core import about,                                                \
                        space,                                                \
                        field,                                                \
                        operator,diagonal_operator,identity,vecvec_operator,  \
                        probing
+import six
+from six.moves import range
+from six.moves import zip
 
 
 ##-----------------------------------------------------------------------------
@@ -1103,7 +1107,7 @@ class explicit_operator(operator):
 
         """
         det = self.det()
-        if(det<>0):
+        if(det!=0):
             return 1/det
         else:
             raise ValueError(about._errors.cstring("ERROR: singular matrix."))
@@ -1628,9 +1632,9 @@ class explicit_operator(operator):
     __itruediv__ = __idiv__
 
     def __pow__(self,x): ## __pow__(): self ** x
-        if(not isinstance(x,(int,long))):
+        if(not isinstance(x,six.integer_types)):
             raise TypeError(about._errors.cstring("ERROR: non-integer exponent."))
-        elif(self.domain<>self.target):
+        elif(self.domain!=self.target):
             raise ValueError(about._errors.cstring("ERROR: incompatible spaces."))
         elif(x==0):
             return identity(self.domain)
@@ -1640,7 +1644,7 @@ class explicit_operator(operator):
             return self
         else:
             matrix = self._calc_mul(self.val,0)
-            for ii in xrange(x-1):
+            for ii in range(x-1):
                 matrix = self._calc_mul(matrix,0)
             return explicit_operator(self.domain,matrix,bare=True,sym=None,uni=self.uni,target=self.target)
 
@@ -1648,9 +1652,9 @@ class explicit_operator(operator):
         raise Exception(about._errors.cstring("ERROR: matrix exponential ill-defined."))
 
     def __ipow__(self,x): ## __pow__(): self **= x
-        if(not isinstance(x,(int,long))):
+        if(not isinstance(x,six.integer_types)):
             raise TypeError(about._errors.cstring("ERROR: non-integer exponent."))
-        elif(self.domain<>self.target):
+        elif(self.domain!=self.target):
             raise ValueError(about._errors.cstring("ERROR: incompatible spaces."))
         elif(x==0):
             self.val = np.diag(self.domain.calc_weight(np.ones(self.domain.dim(split=False),dtype=np.int,order='C'),power=-1).astype(self.val.dtype),k=0)
@@ -1660,7 +1664,7 @@ class explicit_operator(operator):
             pass
         else:
             matrix = self._calc_mul(self.val,0)
-            for ii in xrange(x-1):
+            for ii in range(x-1):
                 matrix = self._calc_mul(matrix,0)
             self.val = matrix
 
@@ -1824,21 +1828,21 @@ class explicit_operator(operator):
 
         if(np.any(np.iscomplex(X))):
             about.infos.cprint("INFO: absolute values and phases are plotted.")
-            if(kwargs.has_key("title")):
+            if("title" in kwargs):
                 title = kwargs.get("title")+" "
                 kwargs.__delitem__("title")
             else:
                 title = ""
             self.get_plot(np.absolute(X),title=title+"(absolute)",**kwargs)
-            if(kwargs.has_key("vmin")):
+            if("vmin" in kwargs):
                 kwargs.__delitem__("vmin")
-            if(kwargs.has_key("vmin")):
+            if("vmin" in kwargs):
                 kwargs.__delitem__("vmax")
-            if(kwargs.has_key("unit")):
+            if("unit" in kwargs):
                 kwargs["unit"] = "rad"
-            if(kwargs.has_key("norm")):
+            if("norm" in kwargs):
                 kwargs["norm"] = None
-            if(not kwargs.has_key("cmap")):
+            if("cmap" not in kwargs):
                 kwargs["cmap"] = pl.cm.hsv_r
             self.get_plot(np.angle(X,deg=False),title=title+"(phase)",vmin=-3.1416,vmax=3.1416,**kwargs) ## values in [-pi,pi]
         else:
@@ -2009,7 +2013,7 @@ class explicit_probing(probing):
             elif(op==function):
                 function = op.times
             ## check whether correctly bound
-            if(op!=function.im_self):
+            if(op!=function.__self__):
                 raise NameError(about._errors.cstring("ERROR: invalid input function."))
             ## check given domain
             if(domain is None)or(not isinstance(domain,space)):
@@ -2220,7 +2224,7 @@ class explicit_probing(probing):
         pool = mp(processes=self.ncpu,initializer=_share._init_share,initargs=(_mat,_num),maxtasksperchild=self.nper)
         try:
             ## pooling
-            pool.map_async(self._serial_probing,zip(np.arange(self.nrun,dtype=np.int),base),chunksize=None,callback=None).get(timeout=None)
+            pool.map_async(self._serial_probing,list(zip(np.arange(self.nrun,dtype=np.int),base)),chunksize=None,callback=None).get(timeout=None)
             ## close and join pool
             about.infos.cflush(" done.")
             pool.close()
@@ -2249,7 +2253,7 @@ class explicit_probing(probing):
             so.flush()
         _mat = np.empty((self.nrun,self.codomain.dim(split=False)),dtype=self.codomain.datatype,order='C')
         _num = 0
-        for ii in xrange(self.nrun):
+        for ii in range(self.nrun):
             result = self._single_probing((ii,base[ii])) ## zipped tuple
             if(result is None):
                 _mat[ii] = np.zeros(self.codomain.dim(split=False),dtype=self.codomain.datatype)

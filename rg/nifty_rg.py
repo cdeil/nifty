@@ -32,6 +32,7 @@
 
 """
 from __future__ import division
+from __future__ import absolute_import
 #from nifty import *
 import os
 import numpy as np
@@ -43,12 +44,13 @@ from nifty.nifty_core import about,                                          \
                              space,                                          \
                              field
 import nifty.smoothing as gs
-import powerspectrum as gp
+from . import powerspectrum as gp
+from six.moves import range
 try:
     import gfft as gf
 except(ImportError):
     about.infos.cprint('INFO: "plain" gfft version 0.1.0')
-    import gfft_rg as gf
+    from . import gfft_rg as gf
 
 
 ##-----------------------------------------------------------------------------
@@ -1055,7 +1057,7 @@ class rg_space(space):
             if(other is not None):
                 if(isinstance(other,tuple)):
                     other = list(other)
-                    for ii in xrange(len(other)):
+                    for ii in range(len(other)):
                         if(isinstance(other[ii],field)):
                             other[ii] = other[ii].power(**kwargs)
                         else:
@@ -1065,7 +1067,7 @@ class rg_space(space):
                 else:
                     other = [self.enforce_power(other,size=np.size(xaxes),kindex=xaxes)]
                 imax = max(1,len(other)-1)
-                for ii in xrange(len(other)):
+                for ii in range(len(other)):
                     ax0.loglog(xaxes[1:],(xaxes**norm*other[ii])[1:],color=[max(0.0,1.0-(2*ii/imax)**2),0.5*((2*ii-imax)/imax)**2,max(0.0,1.0-(2*(ii-imax)/imax)**2)],label="graph "+str(ii+1),linestyle='-',linewidth=1.0,zorder=-ii)
                     if(mono):
                         ax0.scatter(0.5*(xaxes[1]+xaxes[2]),other[ii][0],s=20,color=[max(0.0,1.0-(2*ii/imax)**2),0.5*((2*ii-imax)/imax)**2,max(0.0,1.0-(2*(ii-imax)/imax)**2)],marker='o',cmap=None,norm=None,vmin=None,vmax=None,alpha=None,linewidths=None,verts=None,zorder=-ii)
@@ -1116,7 +1118,7 @@ class rg_space(space):
                     else:
                         other = [self.enforce_values(other,extend=True)]
                     imax = max(1,len(other)-1)
-                    for ii in xrange(len(other)):
+                    for ii in range(len(other)):
                         ax0graph(xaxes,other[ii],color=[max(0.0,1.0-(2*ii/imax)**2),0.5*((2*ii-imax)/imax)**2,max(0.0,1.0-(2*(ii-imax)/imax)**2)],label="graph "+str(ii+1),linestyle='-',linewidth=1.0,zorder=-ii)
                     if("error" in kwargs):
                         error = self.enforce_values(np.absolute(kwargs.get("error")),extend=True)

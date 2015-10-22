@@ -20,6 +20,7 @@
 ## along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 from __future__ import division
-from nifty_rg import *
-from nifty_power_conversion_rg import *
+from __future__ import absolute_import
+from .nifty_rg import *
+from .nifty_power_conversion_rg import *
 

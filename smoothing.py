@@ -23,7 +23,9 @@
 ## TODO: doc strings
 
 from __future__ import division
+from __future__ import absolute_import
 import numpy as np
+from six.moves import range
 #import gfft as gf
 
 
@@ -106,7 +108,7 @@ def smooth_power_bf(power, k, exclude=1, smooth_length=None):
     mdk = np.r_[0.5*(mk[1]-mk[0]),0.5*(mk[2:]-mk[:-2]),0.5*(mk[-1]-mk[-2])]
 
     p_smooth = np.empty(mpower.shape)
-    for i in xrange(len(p_smooth)):
+    for i in range(len(p_smooth)):
         C = np.exp(-(mk-mk[i])**2/(2.*smooth_length**2))*mdk
         p_smooth[i] = np.sum(C*mpower)/np.sum(C)
 
@@ -148,7 +150,7 @@ def smooth_power_2s(power, k, exclude=1, smooth_length=None):
     mdk = np.r_[0.5*(mk[1]-mk[0]),0.5*(mk[2:]-mk[:-2]),0.5*(mk[-1]-mk[-2])]
 
     p_smooth = np.empty(mpower.shape)
-    for i in xrange(len(p_smooth)):
+    for i in range(len(p_smooth)):
         l = i-int(2*smooth_length/mdk[i])-1
         l = max(l,0)
         u = i+int(2*smooth_length/mdk[i])+2

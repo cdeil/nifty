@@ -1,3 +1,5 @@
+from __future__ import absolute_import
+from __future__ import print_function
 ## NIFTY (Numerical Information Field Theory) has been developed at the
 ## Max-Planck-Institute for Astrophysics.
 ##
@@ -24,6 +26,7 @@
 
 import numpy as np
 import warnings
+from six.moves import range
 
 
 def gfft(inp, in_ax=[], out_ax=[], ftmachine='fft', in_zero_center=True, \
@@ -114,7 +117,7 @@ def gfft(inp, in_ax=[], out_ax=[], ftmachine='fft', in_zero_center=True, \
     VERSION = "0.2.1"
 
     if verbose:
-        print "gfft v. "+VERSION
+        print("gfft v. "+VERSION)
 
     ############################################################################
     # Set some global variables
@@ -250,8 +253,8 @@ def gfft(inp, in_ax=[], out_ax=[], ftmachine='fft', in_zero_center=True, \
             'number of dimensions!')
 
     if verbose:
-        print 'Requested mode = ' + mode_types[mode]
-        print "Number of dimensions = " + str(N)
+        print('Requested mode = ' + mode_types[mode])
+        print("Number of dimensions = " + str(N))
 
     ############################################################################
     # Figure out which axes should have which transforms applied to them
@@ -287,8 +290,8 @@ def gfft(inp, in_ax=[], out_ax=[], ftmachine='fft', in_zero_center=True, \
 #            warnings.warn('No Fourier transformation requested, only '+\
 #                'shifting will be performed!')
             if verbose:
-                print "No Fourier transformation requested, only "+\
-                    "shifting will be performed!"
+                print("No Fourier transformation requested, only "+\
+                    "shifting will be performed!")
             mode = MODE_RR #Since gridding will not be needed, just use RR mode
 
     ############################################################################
@@ -358,8 +361,8 @@ def gfft(inp, in_ax=[], out_ax=[], ftmachine='fft', in_zero_center=True, \
     # Print operation summary
 
     if verbose:
-        print ""
-        print "Axis#, FFT, IFFT, ZCIN, ZCOUT, HERM"
+        print("")
+        print("Axis#, FFT, IFFT, ZCIN, ZCOUT, HERM")
 
         for i in range(N):
             pstr = str(N)+', '
@@ -389,7 +392,7 @@ def gfft(inp, in_ax=[], out_ax=[], ftmachine='fft', in_zero_center=True, \
             else:
                 pstr = pstr + 'False'
 
-        print pstr
+        print(pstr)
 
     ############################################################################
     # Do MODE_RR transform
@@ -411,8 +414,8 @@ def gfft(inp, in_ax=[], out_ax=[], ftmachine='fft', in_zero_center=True, \
             out = np.fft.fftshift(out, axes=postshift_axes)
 
         if verbose:
-            print "Done!"
-            print ""
+            print("Done!")
+            print("")
 
         return out
 

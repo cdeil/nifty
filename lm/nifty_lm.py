@@ -32,6 +32,7 @@
 
 """
 from __future__ import division
+from __future__ import absolute_import
 #from nifty import *
 import os
 import numpy as np
@@ -43,6 +44,7 @@ from nifty import pi,                                                        \
                   random,                                                    \
                   space,                                                     \
                   field
+from six.moves import range
 #import libsharp_wrapper_gl as gl
 try:
     import libsharp_wrapper_gl as gl
@@ -826,7 +828,7 @@ class lm_space(space):
             if(other is not None):
                 if(isinstance(other,tuple)):
                     other = list(other)
-                    for ii in xrange(len(other)):
+                    for ii in range(len(other)):
                         if(isinstance(other[ii],field)):
                             other[ii] = other[ii].power(**kwargs)
                         else:
@@ -836,7 +838,7 @@ class lm_space(space):
                 else:
                     other = [self.enforce_power(other)]
                 imax = max(1,len(other)-1)
-                for ii in xrange(len(other)):
+                for ii in range(len(other)):
                     ax0.loglog(xaxes[1:],(xaxes*(2*xaxes+1)*other[ii])[1:],color=[max(0.0,1.0-(2*ii/imax)**2),0.5*((2*ii-imax)/imax)**2,max(0.0,1.0-(2*(ii-imax)/imax)**2)],label="graph "+str(ii+1),linestyle='-',linewidth=1.0,zorder=-ii)
                     if(mono):
                         ax0.scatter(0.5*(xaxes[1]+xaxes[2]),other[ii][0],s=20,color=[max(0.0,1.0-(2*ii/imax)**2),0.5*((2*ii-imax)/imax)**2,max(0.0,1.0-(2*(ii-imax)/imax)**2)],marker='o',cmap=None,norm=None,vmin=None,vmax=None,alpha=None,linewidths=None,verts=None,zorder=-ii)
@@ -878,7 +880,7 @@ class lm_space(space):
                 xmesh[4,1] = None
                 xmesh[1,4] = None
                 lm = 0
-                for mm in xrange(self.para[1]+1):
+                for mm in range(self.para[1]+1):
                     xmesh[mm][mm:] = x[lm:lm+self.para[0]+1-mm]
                     lm += self.para[0]+1-mm
 
@@ -1526,7 +1528,7 @@ class gl_space(space):
             if(other is not None):
                 if(isinstance(other,tuple)):
                     other = list(other)
-                    for ii in xrange(len(other)):
+                    for ii in range(len(other)):
                         if(isinstance(other[ii],field)):
                             other[ii] = other[ii].power(**kwargs)
                         else:
@@ -1536,7 +1538,7 @@ class gl_space(space):
                 else:
                     other = [self.enforce_power(other)]
                 imax = max(1,len(other)-1)
-                for ii in xrange(len(other)):
+                for ii in range(len(other)):
                     ax0.loglog(xaxes[1:],(xaxes*(2*xaxes+1)*other[ii])[1:],color=[max(0.0,1.0-(2*ii/imax)**2),0.5*((2*ii-imax)/imax)**2,max(0.0,1.0-(2*(ii-imax)/imax)**2)],label="graph "+str(ii+1),linestyle='-',linewidth=1.0,zorder=-ii)
                     if(mono):
                         ax0.scatter(0.5*(xaxes[1]+xaxes[2]),other[ii][0],s=20,color=[max(0.0,1.0-(2*ii/imax)**2),0.5*((2*ii-imax)/imax)**2,max(0.0,1.0-(2*(ii-imax)/imax)**2)],marker='o',cmap=None,norm=None,vmin=None,vmax=None,alpha=None,linewidths=None,verts=None,zorder=-ii)
@@ -2153,7 +2155,7 @@ class hp_space(space):
             if(other is not None):
                 if(isinstance(other,tuple)):
                     other = list(other)
-                    for ii in xrange(len(other)):
+                    for ii in range(len(other)):
                         if(isinstance(other[ii],field)):
                             other[ii] = other[ii].power(**kwargs)
                         else:
@@ -2163,7 +2165,7 @@ class hp_space(space):
                 else:
                     other = [self.enforce_power(other)]
                 imax = max(1,len(other)-1)
-                for ii in xrange(len(other)):
+                for ii in range(len(other)):
                     ax0.loglog(xaxes[1:],(xaxes*(2*xaxes+1)*other[ii])[1:],color=[max(0.0,1.0-(2*ii/imax)**2),0.5*((2*ii-imax)/imax)**2,max(0.0,1.0-(2*(ii-imax)/imax)**2)],label="graph "+str(ii+1),linestyle='-',linewidth=1.0,zorder=-ii)
                     if(mono):
                         ax0.scatter(0.5*(xaxes[1]+xaxes[2]),other[ii][0],s=20,color=[max(0.0,1.0-(2*ii/imax)**2),0.5*((2*ii-imax)/imax)**2,max(0.0,1.0-(2*(ii-imax)/imax)**2)],marker='o',cmap=None,norm=None,vmin=None,vmax=None,alpha=None,linewidths=None,verts=None,zorder=-ii)
